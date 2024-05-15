@@ -15,6 +15,25 @@ void ft_putstr(char *s)
     }
 }
 
+// This function is used to print a string and return the number of characters printed. If s terminates with '\0', it will return the number of characters printed + 1.
+int ft_printstr(char *s) 
+{
+    int count = 0;
+    while (*s)
+    {
+        ft_putchar(*s);
+        s++;
+        count++;
+    }
+    return (count);
+}
+
+int ft_printchar(char c) //This function is used to print a character and return the number of characters printed.
+{
+    ft_putchar(c);
+    return (1);
+}
+
 int ft_printnbr(int n) //This function is used to print an integer and return the number of characters printed
 {
     int count = 0;

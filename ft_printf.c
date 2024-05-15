@@ -1,4 +1,5 @@
 
+#include <stdarg.h>
 
 //va_start initializes the argument list.
 //va_arg retrieves each integer passed after the first parameter.
@@ -6,67 +7,64 @@
 //va_copy copies the argument list to another variable.
 //cspdiuxX% are the conversion specifiers that can be used with printf.
 
-int printf(const char *format, ...)
+int ft_printf(const char *str, ...)
 {
-    va_list args; // Va_list bir veri türüdür ve bu veri türü bir fonksiyonun değişken sayıda argüman almasını sağlar.
-    va_start(args, format); // Va_start fonksiyonu, bir fonksiyonun değişken sayıda argüman almasını sağlar. Bu fonksiyon, va_list veri türüne sahip bir değişkeni başlatır. For
+    va_list args;
+    va_start(args, str);
+    int count = 0;
+    int i = 0;
 
-    while (*format)
+    while(str[i])
     {
-        if(*format == '%')
+        if(str[i] != '%')
         {
-            format++;
+            ft_putchar(str[i]);
+            i++;
+            count++;
         }
-        if (*format == 'd' || *format == 'i')
+        else
         {
-            int i = va_arg(args, int);
-            write(1, &i, 1);
+            count += formats(args, str[i + 1]);
         }
-        else if (*format == 'c')
-        {
-            char c = va_arg(args, int);
-            printf("%c", c);
-        }
-        else if (*format == 's')
-        {
-            char *s = va_arg(args, char *);
-            printf("%s", s);
-        }
-        else if (*format == 'f')
-        {
-            double d = va_arg(args, double);
-            printf("%f", d);
-        }
-        else if (*format == 'x')
-        {
-            int x = va_arg(args, int);
-            printf("%x", x);
-        }
-        else if (*format == 'X')
-        {
-            int X = va_arg(args, int);
-            printf("%X", X);
-        }
-        else if (*format == 'u')
-        {
-            unsigned int u = va_arg(args, unsigned int);
-            printf("%u", u);
-        }
-        else if (*format == 'p')
-        {
-            void *p = va_arg(args, void *);
-            printf("%p", p);
-        }
-        else if (*format == '%')
-        {
-            printf("%%");
-
-        }
-        format++;
+        i++;
     }
     va_end(args);
+    return count;
 }
 
+int formats(va_list args, const char *format)
+{
+    int count = 0;
+    while (*format)
+    {
+        if (*format == '%')
+        {
+            format++;
+            if (*format == 'd' || *format == 'i')
+                count += ft_printnbr(va_arg(args, int));
+            else if (*format == 'c')
+                count += ft_printchar((char)va_arg(args, int));
+            else if (*format == 's')
+                count += ft_printformat(va_arg(args, char *));
+            else if (*format == 'f')
+                count += ft_printfloat(va_arg(args, double));
+            else if (*format == 'x')
+                count += ft_printhex(va_arg(args, unsigned int));
+            else if (*format == 'X')
+                count += ft_printhex(va_arg(args, unsigned int));
+            else if (*format == 'u')
+                count += ft_printhex(va_arg(args, unsigned int));
+            else if (*format == 'p')
+                count += ft_printptr(va_arg(args, void *));
+            else if (*format == '%')
+                count += ft_putchar('%');
+        }
+        else
+            count += ft_putchar(*format);
+        format++;
+    }
+    return count;
+}
 
 
 
@@ -78,7 +76,7 @@ int printf(const char *format, ...)
 #va_list ne icin kullanilir?
 //va_list, bir fonksiyonun değişken sayıda argüman almasını sağlar. Örneğin, printf fonksiyonu, değişken sayıda argüman alır.
 //va_list, stdarg.h başlık dosyasında tanımlanmıştır. Bu başlık dosyası, değişken sayıda argüman almak için kullanılan makroları içerir.
-//Mesela prinf fonksiyonu, bir arguman örnegi olarak, format stringi ve format stringindeki degiskenlerin degerlerini alir.
+//Mesela prinf fonksiyonu, bir arguman örnegi olarak, format formatingi ve format formatingindeki degiskenlerin degerlerini alir.
 //Bu degerlerin alinmasi icin va_list kullanilir.
 
 #va_start ne icin kullanilir?
