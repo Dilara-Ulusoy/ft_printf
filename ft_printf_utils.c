@@ -1,5 +1,4 @@
-#include <unistd.h>
-#include <stdarg.h>
+#include "ft_printf.h"
 
 void ft_putchar(char c)
 {
@@ -16,16 +15,13 @@ void ft_putstr(char *s)
 }
 
 // This function is used to print a string and return the number of characters printed. If s terminates with '\0', it will return the number of characters printed + 1.
-int ft_printstr(char *s) 
-{
+int ft_printstr(const char *s) {
     int count = 0;
-    while (*s)
-    {
-        ft_putchar(*s);
-        s++;
+    while (*s) {
+        ft_putchar(*s++);
         count++;
     }
-    return (count);
+    return count; // Returning the number of characters printed
 }
 
 int ft_printchar(char c) //This function is used to print a character and return the number of characters printed.
@@ -83,5 +79,27 @@ int ft_printptr(void *p) //This function is used to print a pointer and return t
     }
     ft_printhex((unsigned long long)p % 16);
     count++;
+    return (count);
+}
+
+int ft_printfloat(double d) //This function is used to print a floating point number and return the number of characters printed.
+{
+    int count = 0;
+    if (d < 0)
+    {
+        ft_putchar('-');
+        d = -d;
+        count++;
+    }
+    count += ft_printnbr((int)d);
+    ft_putchar('.');
+    count++;
+    d -= (int)d;
+    for (int i = 0; i < 6; i++)
+    {
+        d *= 10;
+        count += ft_printnbr((int)d);
+        d -= (int)d;
+    }
     return (count);
 }
