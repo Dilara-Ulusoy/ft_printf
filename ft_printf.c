@@ -1,12 +1,6 @@
 
 # include "ft_printf.h"
 
-//va_start initializes the argument list.
-//va_arg retrieves each integer passed after the first parameter.
-//va_end cleans up the argument list after processing.
-//va_copy copies the argument list to another variable.
-//cspdiuxX% are the conversion specifiers that can be used with printf.
-
 int ft_printf(const char *s, ...)
 {
     va_list args; //va_list is a type to hold information about variable arguments.
@@ -15,14 +9,16 @@ int ft_printf(const char *s, ...)
     int i = 0;
 
  while (s[i]) {
-    if (s[i] != '%') {
+    if (s[i] != '%')
+    {
         ft_putchar(s[i]);
         count++;
-    } else {
+    } 
+    else 
+    {
         // Format sonrası karakteri 'formats' fonksiyonuna gönder
-        count += formats(args, s + i + 1);
-        i += 2; // '%' ve sonraki karakter için iki adım ilerle
-        continue;
+        count += formats(args, &s[i + 1]);
+        i++; // '%' ve sonraki karakter için iki adım ilerle
     }
     i++;
 }
@@ -46,18 +42,27 @@ int formats(va_list args, const char *format)
         else if (*format == 'f')
             count += ft_printfloat(va_arg(args, double));
         else if (*format == 'x')
-            count += ft_printhex(va_arg(args, unsigned int));
+            count += ft_printhex(va_arg(args, unsigned int), 0);
         else if (*format == 'X')
-            count += ft_printhex(va_arg(args, unsigned int));
+            count += ft_printhex(va_arg(args, unsigned int), 1);
         else if (*format == 'u')
-            count += ft_printhex(va_arg(args, unsigned int));
+            count += ft_printhex(va_arg(args, unsigned int), 0);
         else if (*format == 'p')
             count += ft_printptr(va_arg(args, void *));
         else if (*format == '%')
-            count += ft_printchar('%');
+            count += ft_printpercent();
         else
             count += ft_printchar(*format);
         format++;
     }
     return count;
 }
+
+
+
+
+//va_start initializes the argument list.
+//va_arg retrieves each integer passed after the first parameter.
+//va_end cleans up the argument list after processing.
+//va_copy copies the argument list to another variable.
+//cspdiuxX% are the conversion specifiers that can be used with printf.

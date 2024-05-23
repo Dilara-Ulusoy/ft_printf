@@ -48,14 +48,14 @@ int ft_printnbr(int n) //This function is used to print an integer and return th
     return (count);
 }
 
-int ft_printhex(unsigned int n) //This function is used to print an hexadecimal number and return the number of characters printed.
+int ft_printhex(unsigned int n, int uppercase) //This function is used to print an hexadecimal number and return the number of characters printed.
 //Example: ft_printhex(10) will print "a" and return 1. ft_printhex(16) will print "10" and return 2. because 16 in hexadecimal is 10 and it has 2 characters.
 //Another example: ft_printhex(255) will print "ff" and return 2. because 255 in hexadecimal is ff and it has 2 characters.
 {
     int count = 0;
     if (n >= 16)
     {
-        count += ft_printhex(n / 16);
+        count += ft_printhex(n / 16, uppercase);
     }
     if (n % 16 < 10)
     {
@@ -63,28 +63,29 @@ int ft_printhex(unsigned int n) //This function is used to print an hexadecimal 
     }
     else
     {
-        ft_putchar(n % 16 - 10 + 'a');
+        if(uppercase)
+            ft_putchar(n % 16 - 10 + 'A');
+        else
+            ft_putchar(n % 16 - 10 + 'a');
     }
     count++;
     return (count);
 }
+
 int ft_printptr(void *p) //This function is used to print a pointer and return the number of characters printed.
 {
     int count = 0;
     ft_putstr("0x");
     count += 2;
-    if ((unsigned long long)p >= 16)
-    {
-        count += ft_printhex((unsigned long long)p / 16);
-    }
-    ft_printhex((unsigned long long)p % 16);
-    count++;
+    count += ft_printhex((unsigned long)p, 1);
     return (count);
 }
 
-int ft_printfloat(double d) //This function is used to print a floating point number and return the number of characters printed.
+int ft_printfloat(double d) //This function is used to print a floating point number and return the number of characters printed. 
+//Exp: ft_printfloat(3.14) will print "3.140000" and return 8.
 {
     int count = 0;
+    int i = 0;
     if (d < 0)
     {
         ft_putchar('-');
@@ -94,12 +95,19 @@ int ft_printfloat(double d) //This function is used to print a floating point nu
     count += ft_printnbr((int)d);
     ft_putchar('.');
     count++;
-    d -= (int)d;
-    for (int i = 0; i < 6; i++)
+    d -= (int)d; //d = d - (int)d = 3.14 - 3 = 0.14. 
+    while(i < 6)
     {
-        d *= 10;
-        count += ft_printnbr((int)d);
-        d -= (int)d;
+        d *= 10; //d = 0.14 * 10 = 1.4
+        count += ft_printnbr((int)d); //count = 4 + 1 = 5, print 1
+        d -= (int)d; //d = 1.4 - 1 = 0.4
+        i++;    
     }
     return (count);
+}
+
+int ft_printpercent(void) //This function is used to print a percent sign and return the number of characters printed.
+{
+    ft_putchar('%');
+    return (1);
 }
