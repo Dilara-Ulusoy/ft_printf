@@ -8,55 +8,53 @@ int ft_printf(const char *s, ...)
     int count = 0; //This variable will be used to count the number of characters printed.
     int i = 0;
 
- while (s[i]) {
-    if (s[i] != '%')
+ while (s[i])
+ {
+    if (s[i] == '%')
     {
-        ft_putchar(s[i]);
-        count++;
+        i++;
+        count += formats(args, s[i]);  
+        if (count < 0)
+		return (-1);
     } 
     else 
     {
-        // Format sonrası karakteri 'formats' fonksiyonuna gönder
-        count += formats(args, &s[i + 1]);
-        i++; // '%' ve sonraki karakter için iki adım ilerle
+        count += ft_printchar(s[i]);
+        if (count < 0)
+		return (-1);
     }
     i++;
 }
-    va_end(args); //va_end is used to clean up the va_list variable after you are done with it.
+    va_end(args);
+    if (count < 0)
+		return (-1);
     return count;
 }
 
-int formats(va_list args, const char *format)
+int formats(va_list args, const char format)
 {
     int count = 0;
-    while (*format)
-    {
-        if (*format == '%')
-            format++;
-        if (*format == 'd' || *format == 'i')
-            count += ft_printnbr(va_arg(args, int));
-        else if (*format == 'c')
+        if (format == 'd' || format == 'i')
+            count += ft_printnbr(va_arg(args, int)); 
+        else if (format == 'c')
             count += ft_printchar((char)va_arg(args, int));
-        else if (*format == 's')
+        else if (format == 's')
             count += ft_printstr(va_arg(args, char *));
-        else if (*format == 'f')
-            count += ft_printfloat(va_arg(args, double));
-        else if (*format == 'x')
+        else if (format == 'x')
             count += ft_printhex(va_arg(args, unsigned int), 0);
-        else if (*format == 'X')
+        else if (format == 'X')
             count += ft_printhex(va_arg(args, unsigned int), 1);
-        else if (*format == 'u')
+        else if (format == 'u')
             count += ft_printhex(va_arg(args, unsigned int), 0);
-        else if (*format == 'p')
+        else if (format == 'p')
             count += ft_printptr(va_arg(args, void *));
-        else if (*format == '%')
+        else if (format == '%')
             count += ft_printpercent();
         else
-            count += ft_printchar(*format);
-        format++;
+            count += ft_printchar(format);
+        return count;
     }
-    return count;
-}
+    
 
 
 

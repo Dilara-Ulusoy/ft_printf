@@ -1,51 +1,56 @@
 #include "ft_printf.h"
 
-void ft_putchar(char c)
-{
-    write(1, &c, 1);
-}
-
-void ft_putstr(char *s)
-{
-    while (*s)
-    {
-        ft_putchar(*s);
-        s++;
-    }
-}
-
 // This function is used to print a string and return the number of characters printed. If s terminates with '\0', it will return the number of characters printed + 1.
-int ft_printstr(const char *s) {
-    int count = 0;
-    while (*s) {
-        ft_putchar(*s++);
-        count++;
-    }
-    return count; // Returning the number of characters printed
+int	ft_printstr(char *str)
+{
+	int	count;
+
+	count = 0;
+	if (str == NULL)
+		return (write(1, "(null)", 6));
+	while (str[count])
+	{
+		write (1, &str[count], 1);
+		count++;
+	}
+	if (count < 0)
+		return (-1);
+	return (count);
 }
 
 int ft_printchar(char c) //This function is used to print a character and return the number of characters printed.
 {
-    ft_putchar(c);
+    write(1, &c, 1);
     return (1);
 }
 
-int ft_printnbr(int n) //This function is used to print an integer and return the number of characters printed
+int	ft_printnbr(int nb)
 {
-    int count = 0;
-    if (n < 0)
-    {
-        ft_putchar('-');
-        n = -n;
-        count++;
-    }
-    if (n >= 10)
-    {
-        count += ft_printnbr(n / 10);
-    }
-    ft_putchar(n % 10 + '0');
-    count++;
-    return (count);
+	int	count;
+
+	count = 0;
+	if (nb == -2147483648)
+		count += ft_printstr("-2147483648");
+	else if (nb < 0)
+	{
+		count += ft_printchar('-');
+		nb = -nb;
+		count += ft_printnbr(nb);
+	}
+	else
+	{
+		if (nb >= 10)
+		{
+			count += ft_printnbr(nb / 10);
+			count += ft_printnbr(nb % 10);
+		}
+		else
+            count += ft_printchar(nb + '0');
+	}
+	ft_itoa(nb);
+	if (count < 0)
+		return (-1);
+	return (count);
 }
 
 int ft_printhex(unsigned int n, int uppercase) //This function is used to print an hexadecimal number and return the number of characters printed.
@@ -59,14 +64,14 @@ int ft_printhex(unsigned int n, int uppercase) //This function is used to print 
     }
     if (n % 16 < 10)
     {
-        ft_putchar(n % 16 + '0');
+        ft_printchar(n % 16 + '0');
     }
     else
     {
         if(uppercase)
-            ft_putchar(n % 16 - 10 + 'A');
+            ft_printchar(n % 16 - 10 + 'A');
         else
-            ft_putchar(n % 16 - 10 + 'a');
+            ft_printchar(n % 16 - 10 + 'a');
     }
     count++;
     return (count);
@@ -75,39 +80,14 @@ int ft_printhex(unsigned int n, int uppercase) //This function is used to print 
 int ft_printptr(void *p) //This function is used to print a pointer and return the number of characters printed.
 {
     int count = 0;
-    ft_putstr("0x");
+    ft_printstr("0x");
     count += 2;
     count += ft_printhex((unsigned long)p, 1);
     return (count);
 }
 
-int ft_printfloat(double d) //This function is used to print a floating point number and return the number of characters printed. 
-//Exp: ft_printfloat(3.14) will print "3.140000" and return 8.
-{
-    int count = 0;
-    int i = 0;
-    if (d < 0)
-    {
-        ft_putchar('-');
-        d = -d;
-        count++;
-    }
-    count += ft_printnbr((int)d);
-    ft_putchar('.');
-    count++;
-    d -= (int)d; //d = d - (int)d = 3.14 - 3 = 0.14. 
-    while(i < 6)
-    {
-        d *= 10; //d = 0.14 * 10 = 1.4
-        count += ft_printnbr((int)d); //count = 4 + 1 = 5, print 1
-        d -= (int)d; //d = 1.4 - 1 = 0.4
-        i++;    
-    }
-    return (count);
-}
-
 int ft_printpercent(void) //This function is used to print a percent sign and return the number of characters printed.
 {
-    ft_putchar('%');
+    ft_printchar('%');
     return (1);
 }
