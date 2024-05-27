@@ -11,6 +11,27 @@
 /* ************************************************************************** */
 #include "ft_printf.h"
 
+int	ft_printnbr_recursive(int nb)
+{
+	int	count;
+
+	count = 0;
+	if (nb > 9)
+	{
+		count += ft_printnbr_recursive(nb / 10);
+		if (count < 0)
+			return (-1);
+		count += ft_printnbr_recursive(nb % 10);
+	}
+	else
+	{
+		count += ft_printchar(nb + '0');
+		if (count < 0)
+			return (-1);
+	}
+	return (count);
+}
+
 int	ft_printnbr(int nb)
 {
 	int	count;
@@ -18,28 +39,21 @@ int	ft_printnbr(int nb)
 	count = 0;
 	if (nb == -2147483648)
 	{
-		count += ft_printstr("-2147483648");
+		count = ft_printstr("-2147483648");
 		if (count < 0)
 			return (-1);
 	}
 	else if (nb < 0)
 	{
-		count += ft_printchar('-');
+		count = ft_printchar('-');
 		if (count < 0)
 			return (-1);
 		nb = -nb;
-		count += ft_printnbr(nb);
-	}
-	else if (nb > 9)
-	{
-		count += ft_printnbr(nb / 10);
-		if (count < 0)
-			return (-1);
-		count += ft_printnbr(nb % 10);
+		count += ft_printnbr_recursive(nb);
 	}
 	else
 	{
-		count += ft_printchar(nb + '0');
+		count = ft_printnbr_recursive(nb);
 		if (count < 0)
 			return (-1);
 	}
@@ -101,17 +115,6 @@ int	ft_printunsigned(unsigned int n)
 			return (-1);
 	}
 	count += ft_printchar(n % 10 + '0');
-	if (count < 0)
-		return (-1);
-	return (count);
-}
-
-int	ft_printpercent(void)
-{
-	int	count;
-
-	count = 0;
-	count = ft_printchar('%');
 	if (count < 0)
 		return (-1);
 	return (count);

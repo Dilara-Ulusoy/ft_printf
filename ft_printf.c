@@ -6,7 +6,7 @@
 /*   By: dakcakoc <dakcakoce@student.hive.fi>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/27 11:30:16 by dakcakoc          #+#    #+#             */
-/*   Updated: 2024/05/27 11:40:35 by dakcakoc         ###   ########.fr       */
+/*   Updated: 2024/05/27 15:26:25 by dakcakoc         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "ft_printf.h"
@@ -94,6 +94,17 @@ int	ft_printstr(char *str)
 		count += result;
 		str++;
 	}
+	if (count < 0)
+		return (-1);
+	return (count);
+}
+
+int	ft_printpercent(void)
+{
+	int	count;
+
+	count = 0;
+	count = ft_printchar('%');
 	if (count < 0)
 		return (-1);
 	return (count);

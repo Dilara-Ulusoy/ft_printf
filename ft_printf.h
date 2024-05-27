@@ -27,5 +27,6 @@ int	ft_printpercent(void);
 int	ft_printunsigned(unsigned int n);
 int	formats(va_list *args, const char format);
 int	ft_printf(const char *s, ...);
+int	ft_printnbr_recursive(int nb);
 
 #endif
